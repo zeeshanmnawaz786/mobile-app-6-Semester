@@ -1,24 +1,14 @@
 import React, {useState, useEffect} from 'react';
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Button,
-  Modal,
-} from 'react-native';
+import {FlatList, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import axios from 'axios';
 
 import {useNavigation} from '@react-navigation/native';
-import {Dummy} from '../../dummyData';
 import CreateBlog from './createBlog';
+import UpdateBlog from './updateBlog';
 
 export default function MyBlog() {
   const navigation = useNavigation();
   const [allBLogs, setAllBlogData] = useState('');
-  console.log(allBLogs);
 
   const passDataToBlogCardFunc = item => {
     navigation.navigate('BlogCard', {
@@ -35,7 +25,6 @@ export default function MyBlog() {
         const res = await axios.get(
           'https://27ef-111-88-25-251.ngrok-free.app/api/getAllBlogs',
         );
-        console.log(res.data.allBlogs);
         setAllBlogData(res.data.allBlogs);
       } catch (error) {
         console.error('🚀 ~ file: MyBlog.jsx:39 ~ error:', error);
@@ -43,26 +32,20 @@ export default function MyBlog() {
     })();
   }, []);
 
-  const [updateModalVisible, setUpdateModalVisible] = useState(false);
-  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-
-  const showUpdateModal = () => {
-    setUpdateModalVisible(true);
+  const handleDelete = async _id => {
+    console.log('🚀 ~ file: MyBlog.jsx:36 ~ handleDelete ~ id:', _id);
+    try {
+      await axios.delete(
+        `https://27ef-111-88-25-251.ngrok-free.app/api/deleteBlog?_id=${_id}`,
+      );
+      setAllBlogData(prevBlogs => prevBlogs.filter(blog => blog._id !== _id));
+      alert('Successfully blog deleted');
+    } catch (error) {
+      console.log('🚀 ~ file: createBlog.jsx:72 ~ handleLogin ~ error:', error);
+    }
   };
 
-  const hideUpdateModal = () => {
-    setUpdateModalVisible(false);
-  };
-
-  const showDeleteModal = () => {
-    setDeleteModalVisible(true);
-  };
-
-  const hideDeleteModal = () => {
-    setDeleteModalVisible(false);
-  };
   const renderItemFunc = ({item}) => {
-    console.log('🚀 ~ file: MyBlog.jsx:64 ~ renderItemFunc ~ item:', item);
     return (
       <TouchableOpacity
         style={styles.cardContainer}
@@ -75,6 +58,16 @@ export default function MyBlog() {
           <Text style={styles.content}>
             {item.description.slice(0, 100)}...
           </Text>
+          <View style={styles.blogActionContainer}>
+            <UpdateBlog item={item} />
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                handleDelete(item._id);
+              }}>
+              <Text style={styles.buttonText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </TouchableOpacity>
     );
@@ -83,33 +76,6 @@ export default function MyBlog() {
   return (
     <View style={styles.container}>
       <CreateBlog />
-      {/* ================================= */}
-      <View style={styles.buttonContainer}>
-        <Button title="Update Blog" onPress={showUpdateModal} />
-        <Button title="Delete Blog" onPress={showDeleteModal} />
-      </View>
-
-      {/* Update Blog Modal */}
-      <Modal
-        visible={updateModalVisible}
-        animationType="slide"
-        transparent={true}>
-        <View style={styles.modalContent}>
-          <Button title="Close" onPress={hideUpdateModal} />
-        </View>
-      </Modal>
-
-      {/* Delete Blog Modal */}
-      <Modal
-        visible={deleteModalVisible}
-        animationType="slide"
-        transparent={true}>
-        <View style={styles.modalContent}>
-          <Button title="Close" onPress={hideDeleteModal} />
-        </View>
-      </Modal>
-
-      {/* ================================= */}
       <FlatList
         data={allBLogs}
         renderItem={renderItemFunc}
@@ -156,6 +122,23 @@ const styles = StyleSheet.create({
   content: {
     fontSize: 16,
     color: 'gray',
+    marginTop: 10,
+  },
+  button: {
+    backgroundColor: 'blue',
+    padding: 12,
+    borderRadius: 10,
+  },
+  buttonText: {
+    textAlign: 'center',
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  blogActionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 5,
+    width: '50%',
     marginTop: 10,
   },
 });

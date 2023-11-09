@@ -12,11 +12,10 @@ import blogImage from '../../assets/images/blog.png';
 import axios from 'axios';
 import {Picker} from '@react-native-picker/picker';
 
-export default function CreateBlog() {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [author, setAuthor] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState();
+export default function UpdateBlog({item}) {
+  const [title, setTitle] = useState(item.title);
+  const [description, setDescription] = useState(item.description);
+  const [selectedCategory, setSelectedCategory] = useState(item.category);
   const [createModalVisible, setCreateModalVisible] = useState(false);
 
   const showCreateModal = () => {
@@ -27,43 +26,33 @@ export default function CreateBlog() {
     setCreateModalVisible(false);
   };
 
-  const handleLogin = async () => {
-    const currentDate = new Date().toLocaleString();
-    if (
-      title != '' &&
-      description != '' &&
-      author != '' &&
-      currentDate != '' &&
-      selectedCategory != ''
-    ) {
-      try {
-        await axios.post(
-          'https://27ef-111-88-25-251.ngrok-free.app/api/registerBlog',
-          {
-            title: title,
-            description: description,
-            author: author,
-            date: currentDate,
-            category: selectedCategory,
-          },
-        );
-        alert('Succcessfully blog created');
-        setCreateModalVisible(false);
-      } catch (error) {
-        console.log(
-          '🚀 ~ file: createBlog.jsx:72 ~ handleLogin ~ error:',
-          error,
-        );
-      }
-    } else {
-      alert('Try Again...');
+  const handleUpdate = async () => {
+    const data = {
+      title: title,
+      description: description,
+      category: selectedCategory,
+    };
+    console.log('🚀 ~ file: data:', data);
+    try {
+      await axios.put(
+        `https://27ef-111-88-25-251.ngrok-free.app/api/updateBlog?_id=${item._id}`,
+        {
+          title: title,
+          description: description,
+          category: selectedCategory,
+        },
+      );
+      alert('Successfully blog updated');
+      setCreateModalVisible(false);
+    } catch (error) {
+      console.log('🚀 ~ file: createBlog.jsx:72 ~ handleLogin ~ error:', error);
     }
   };
 
   return (
     <>
       <TouchableOpacity style={styles.modalButton} onPress={showCreateModal}>
-        <Text style={styles.buttonText}>Create Blog</Text>
+        <Text style={styles.buttonText}>Update</Text>
       </TouchableOpacity>
       <Modal
         visible={createModalVisible}
@@ -74,16 +63,10 @@ export default function CreateBlog() {
           <TextInput
             style={styles.input}
             placeholder="Title"
+            value={title}
             placeholderTextColor="black"
             onChangeText={text => setTitle(text)}
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Author Name"
-            placeholderTextColor="black"
-            onChangeText={text => setAuthor(text)}
-          />
-
           <View style={styles.pickerStyle}>
             <Picker
               placeholderTextColor="black"
@@ -108,7 +91,7 @@ export default function CreateBlog() {
             onChangeText={text => setDescription(text)}
           />
 
-          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <TouchableOpacity style={styles.button} onPress={handleUpdate}>
             <Text style={styles.buttonText}>Create</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={hideCreateModal}>
@@ -162,12 +145,11 @@ const styles = StyleSheet.create({
     color: 'black',
     borderRadius: 10,
   },
+
   modalButton: {
     backgroundColor: 'blue',
     padding: 12,
-    marginBottom: 10,
     borderRadius: 10,
-    width: '100%',
   },
   button: {
     backgroundColor: 'blue',

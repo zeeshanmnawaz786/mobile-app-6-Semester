@@ -40,15 +40,13 @@ const getAllBlogs = async (req, res) => {
 // http://localhost:8000/api/updateBlog?_id=6547b6e02f3467ddc8364588
 const updateBlog = (req, res) => {
   const blogId = req.params.id;
-  const { title, description, author, date, category } = req.body;
+  const { title, description, category } = req.body;
 
   blogSchema.findOneAndUpdate(
     blogId,
     {
       title,
       description,
-      author,
-      date,
       category,
     },
     { new: true },
@@ -68,24 +66,24 @@ const updateBlog = (req, res) => {
   );
 };
 
-// http://localhost:8000/api/deleteBlog
+// http://localhost:8000/api/deleteBlog?_id=6547b6e02f3467ddc8364588
 const deleteBlog = (req, res) => {
-  const { id } = req.body;
+  const blogId = req.query._id;
+  console.log("🚀 ~ file: blog.js:92 ~ deleteBlog ~ blogId:", blogId);
 
-  blogSchema
-    .findByIdAndDelete(id)
-    .then((deletedBlog) => {
+  blogSchema.findOneAndDelete({ _id: blogId }, (error, deletedBlog) => {
+    if (error) {
+      console.error("Error deleting blog:", error);
+      res.status(500).json({ message: "Failed to delete blog" });
+    } else {
       if (!deletedBlog) {
         return res.status(404).json({ message: "Blog not found" });
       }
 
       console.log("Blog deleted:", deletedBlog);
       res.json({ message: "Blog deleted successfully", data: deletedBlog });
-    })
-    .catch((error) => {
-      console.error("Error deleting blog:", error);
-      res.status(500).json({ message: "Failed to delete blog" });
-    });
+    }
+  });
 };
 
 export { registerBlog, getAllBlogs, updateBlog, deleteBlog };
