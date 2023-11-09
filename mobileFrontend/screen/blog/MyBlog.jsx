@@ -15,7 +15,8 @@ export default function MyBlog() {
       itemId: item.id,
       title: item.title,
       author: item.author,
-      content: item.content,
+      date: item.date,
+      description: item.description,
     });
   };
 

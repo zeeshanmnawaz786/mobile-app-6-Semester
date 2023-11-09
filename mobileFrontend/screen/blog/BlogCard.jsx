@@ -1,19 +1,18 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
+import {Text, StyleSheet, ScrollView} from 'react-native';
 
 export default BlogCard = ({route}) => {
   if (!route.params) {
     return <Text>Loading...</Text>;
   }
 
-  const {title, author, content, imageUrl} = route.params || {};
+  const {title, author, description} = route.params || {};
 
   return (
     <ScrollView contentContainerStyle={styles.container} scrollEnabled={true}>
-      <Image source={{uri: imageUrl}} style={styles.image} />
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.author}>Author: {author}</Text>
-      <Text style={styles.content}>{content}</Text>
+      <Text style={styles.description}>{description}</Text>
     </ScrollView>
   );
 };
@@ -42,7 +41,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'gray',
   },
-  content: {
+  description: {
     color: 'gray',
     fontSize: 16,
     marginTop: 10,
