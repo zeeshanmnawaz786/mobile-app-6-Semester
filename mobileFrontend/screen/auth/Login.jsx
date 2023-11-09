@@ -34,9 +34,9 @@ export default function Login() {
           },
         );
 
+        navigation.navigate('MyBlog');
         await AsyncStorage.setItem('token', res.data.token);
         alert('Succcessfully sign up');
-        navigation.navigate('MyBlog');
       } catch (error) {
         console.log('🚀 ~ file: SignUp.jsx:38 ~ handleSignUp ~ error:', error);
       }

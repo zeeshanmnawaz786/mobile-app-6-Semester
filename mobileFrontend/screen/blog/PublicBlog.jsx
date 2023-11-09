@@ -2,21 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {FlatList, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import axios from 'axios';
 
-import {useNavigation} from '@react-navigation/native';
-
 export default function MyBlog() {
-  const navigation = useNavigation();
   const [allBLogs, setAllBlogData] = useState('');
-
-  const passDataToBlogCardFunc = item => {
-    navigation.navigate('BlogCard', {
-      itemId: item.id,
-      title: item.title,
-      author: item.author,
-      date: item.date,
-      description: item.description,
-    });
-  };
 
   useEffect(() => {
     (async () => {
@@ -33,9 +20,7 @@ export default function MyBlog() {
 
   const renderItemFunc = ({item}) => {
     return (
-      <TouchableOpacity
-        style={styles.cardContainer}
-        onPress={() => passDataToBlogCardFunc(item)}>
+      <TouchableOpacity style={styles.cardContainer}>
         <View style={styles.cardText}>
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.author}>Author: {item.author}</Text>

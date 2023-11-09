@@ -1,5 +1,11 @@
-import React from 'react';
-import {Text, StyleSheet, ScrollView} from 'react-native';
+import React, {useState} from 'react';
+import {
+  Text,
+  StyleSheet,
+  ScrollView,
+  Modal,
+  TouchableOpacity,
+} from 'react-native';
 
 export default BlogCard = ({route}) => {
   if (!route.params) {
@@ -7,13 +13,37 @@ export default BlogCard = ({route}) => {
   }
 
   const {title, author, description} = route.params || {};
+  const [createModalVisible, setCreateModalVisible] = useState(false);
+
+  const showCreateModal = () => {
+    setCreateModalVisible(true);
+  };
+
+  const hideCreateModal = () => {
+    setCreateModalVisible(false);
+  };
 
   return (
-    <ScrollView contentContainerStyle={styles.container} scrollEnabled={true}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.author}>Author: {author}</Text>
-      <Text style={styles.description}>{description}</Text>
-    </ScrollView>
+    <>
+      <TouchableOpacity style={styles.modalButton} onPress={showCreateModal}>
+        <Text style={styles.buttonText}>Create Blog</Text>
+      </TouchableOpacity>
+      <Modal
+        visible={createModalVisible}
+        animationType="fade"
+        transparent={true}>
+        <ScrollView
+          contentContainerStyle={styles.container}
+          scrollEnabled={true}>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.author}>Author: {author}</Text>
+          <Text style={styles.description}>{description}</Text>
+          <TouchableOpacity style={styles.button} onPress={hideCreateModal}>
+            <Text style={styles.buttonText}>Cancel</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </Modal>
+    </>
   );
 };
 

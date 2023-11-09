@@ -2,23 +2,15 @@ import React, {useState, useEffect} from 'react';
 import {FlatList, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import axios from 'axios';
 
-import {useNavigation} from '@react-navigation/native';
 import CreateBlog from './createBlog';
 import UpdateBlog from './updateBlog';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
 
 export default function MyBlog() {
   const navigation = useNavigation();
-  const [allBLogs, setAllBlogData] = useState('');
 
-  const passDataToBlogCardFunc = item => {
-    navigation.navigate('BlogCard', {
-      itemId: item.id,
-      title: item.title,
-      author: item.author,
-      date: item.date,
-      description: item.description,
-    });
-  };
+  const [allBLogs, setAllBlogData] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -45,12 +37,14 @@ export default function MyBlog() {
       console.log('🚀 ~ file: createBlog.jsx:72 ~ handleLogin ~ error:', error);
     }
   };
+  const logoutFunc = async () => {
+    await AsyncStorage.removeItem('token');
+    navigation.navigate('Login');
+  };
 
   const renderItemFunc = ({item}) => {
     return (
-      <TouchableOpacity
-        style={styles.cardContainer}
-        onPress={() => passDataToBlogCardFunc(item)}>
+      <TouchableOpacity style={styles.cardContainer}>
         <View style={styles.cardText}>
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.author}>Author: {item.author}</Text>
@@ -82,6 +76,9 @@ export default function MyBlog() {
         renderItem={renderItemFunc}
         keyExtractor={item => item._id.toString()}
       />
+      <TouchableOpacity style={styles.button} onPress={logoutFunc}>
+        <Text style={styles.buttonText}>Logout</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -101,6 +98,21 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowOffset: {width: 0, height: 2},
     shadowRadius: 2,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 10,
+    color: 'gray',
+  },
+  author: {
+    fontSize: 16,
+    color: 'gray',
+  },
+  description: {
+    color: 'gray',
+    fontSize: 16,
+    marginTop: 10,
   },
   image: {
     width: '100%',
