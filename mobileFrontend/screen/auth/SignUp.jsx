@@ -27,7 +27,7 @@ export default function SignUp() {
       console.log('🚀 ~ file: SignUp.jsx:24 ~ handleSignUp ~ data:', data);
       try {
         await axios.post(
-          'https://c3ab-111-88-13-75.ngrok-free.app/api/registerUser',
+          'https://27ef-111-88-25-251.ngrok-free.app/api/registerUser',
           {
             userName: username,
             userEmail: userEmail,

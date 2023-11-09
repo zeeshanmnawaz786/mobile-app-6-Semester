@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   FlatList,
   Image,
@@ -8,14 +8,17 @@ import {
   TouchableOpacity,
   Button,
   Modal,
-  TextInput,
 } from 'react-native';
+import axios from 'axios';
+
 import {useNavigation} from '@react-navigation/native';
 import {Dummy} from '../../dummyData';
 import CreateBlog from './createBlog';
 
-const MyBlog = () => {
+export default function MyBlog() {
   const navigation = useNavigation();
+  const [allBLogs, setAllBlogData] = useState('');
+  console.log(allBLogs);
 
   const passDataToBlogCardFunc = item => {
     navigation.navigate('BlogCard', {
@@ -23,20 +26,25 @@ const MyBlog = () => {
       title: item.title,
       author: item.author,
       content: item.content,
-      imageUrl: item.imageUrl,
     });
   };
-  // const [createModalVisible, setCreateModalVisible] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await axios.get(
+          'https://27ef-111-88-25-251.ngrok-free.app/api/getAllBlogs',
+        );
+        console.log(res.data.allBlogs);
+        setAllBlogData(res.data.allBlogs);
+      } catch (error) {
+        console.error('🚀 ~ file: MyBlog.jsx:39 ~ error:', error);
+      }
+    })();
+  }, []);
+
   const [updateModalVisible, setUpdateModalVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-
-  // const showCreateModal = () => {
-  //   setCreateModalVisible(true);
-  // };
-
-  // const hideCreateModal = () => {
-  //   setCreateModalVisible(false);
-  // };
 
   const showUpdateModal = () => {
     setUpdateModalVisible(true);
@@ -54,72 +62,32 @@ const MyBlog = () => {
     setDeleteModalVisible(false);
   };
   const renderItemFunc = ({item}) => {
+    console.log('🚀 ~ file: MyBlog.jsx:64 ~ renderItemFunc ~ item:', item);
     return (
       <TouchableOpacity
         style={styles.cardContainer}
         onPress={() => passDataToBlogCardFunc(item)}>
-        <Image source={{uri: item.imageUrl}} style={styles.image} />
         <View style={styles.cardText}>
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.author}>Author: {item.author}</Text>
-          <Text style={styles.content}>{item.content.slice(0, 100)}...</Text>
+          <Text style={styles.author}>Category: {item.category}</Text>
+          <Text style={styles.author}>Date: {item.date}</Text>
+          <Text style={styles.content}>
+            {item.description.slice(0, 100)}...
+          </Text>
         </View>
       </TouchableOpacity>
     );
   };
-
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [content, setContent] = useState('');
-
-  // const handleCreateBlog = () => {
-  //   // You should implement the logic to create a new blog post here.
-  //   // Typically, you would send this data to a server or update your data source.
-
-  //   // After successfully creating the blog, you can close the modal.
-  //   onHideCreateModal();
-  // };
 
   return (
     <View style={styles.container}>
       <CreateBlog />
       {/* ================================= */}
       <View style={styles.buttonContainer}>
-        {/* <Button title="Create Blog" onPress={showCreateModal} /> */}
         <Button title="Update Blog" onPress={showUpdateModal} />
         <Button title="Delete Blog" onPress={showDeleteModal} />
       </View>
-
-      {/* Create Blog Modal */}
-      {/* <Modal
-        visible={createModalVisible}
-        animationType="slide"
-        transparent={true}>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Create Blog</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Title"
-            value={title}
-            onChangeText={text => setTitle(text)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Author"
-            value={author}
-            onChangeText={text => setAuthor(text)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Content"
-            multiline
-            value={content}
-            onChangeText={text => setContent(text)}
-          />
-          <Button title="Create" onPress={handleCreateBlog} />
-          <Button title="Cancel" onPress={hideCreateModal} />
-        </View>
-      </Modal> */}
 
       {/* Update Blog Modal */}
       <Modal
@@ -127,7 +95,6 @@ const MyBlog = () => {
         animationType="slide"
         transparent={true}>
         <View style={styles.modalContent}>
-          {/* Add your Update Blog Form or Content Component Here */}
           <Button title="Close" onPress={hideUpdateModal} />
         </View>
       </Modal>
@@ -138,20 +105,19 @@ const MyBlog = () => {
         animationType="slide"
         transparent={true}>
         <View style={styles.modalContent}>
-          {/* Add your Delete Blog Confirmation Content Component Here */}
           <Button title="Close" onPress={hideDeleteModal} />
         </View>
       </Modal>
 
       {/* ================================= */}
       <FlatList
-        data={Dummy}
+        data={allBLogs}
         renderItem={renderItemFunc}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item._id.toString()}
       />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -193,5 +159,3 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 });
-
-export default MyBlog;

@@ -1,11 +1,11 @@
 import { blogSchema } from "../models/blog.js";
 
 const registerBlog = (req, res) => {
-  const { title, image, description, author, date, category } = req.body;
+  const { title, description, author, date, category } = req.body;
 
   const user = new blogSchema({
     title,
-    image,
+
     description,
     author,
     date,
@@ -40,13 +40,12 @@ const getAllBlogs = async (req, res) => {
 // http://localhost:8000/api/updateBlog?_id=6547b6e02f3467ddc8364588
 const updateBlog = (req, res) => {
   const blogId = req.params.id;
-  const { title, image, description, author, date, category } = req.body;
+  const { title, description, author, date, category } = req.body;
 
   blogSchema.findOneAndUpdate(
     blogId,
     {
       title,
-      image,
       description,
       author,
       date,

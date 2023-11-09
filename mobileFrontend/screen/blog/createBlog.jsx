@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -9,18 +9,14 @@ import {
   StyleSheet,
 } from 'react-native';
 import blogImage from '../../assets/images/blog.png';
-import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import {Picker} from '@react-native-picker/picker';
 
 export default function CreateBlog() {
-  const navigation = useNavigation();
   const [title, setTitle] = useState('');
-  const [image, setImage] = useState('');
   const [description, setDescription] = useState('');
   const [author, setAuthor] = useState('');
   const [selectedCategory, setSelectedCategory] = useState();
-
   const [createModalVisible, setCreateModalVisible] = useState(false);
 
   const showCreateModal = () => {
@@ -35,7 +31,6 @@ export default function CreateBlog() {
     const currentDate = new Date().toLocaleString();
     if (
       title != '' &&
-      image != '' &&
       description != '' &&
       author != '' &&
       currentDate != '' &&
@@ -43,10 +38,9 @@ export default function CreateBlog() {
     ) {
       try {
         await axios.post(
-          'https://c3ab-111-88-13-75.ngrok-free.app/api/registerBlog',
+          'https://27ef-111-88-25-251.ngrok-free.app/api/registerBlog',
           {
             title: title,
-            image: image,
             description: description,
             author: author,
             date: currentDate,
@@ -89,12 +83,7 @@ export default function CreateBlog() {
             placeholderTextColor="black"
             onChangeText={text => setAuthor(text)}
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Image"
-            placeholderTextColor="black"
-            onChangeText={text => setImage(text)}
-          />
+
           <View style={styles.pickerStyle}>
             <Picker
               placeholderTextColor="black"
@@ -142,6 +131,12 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     marginLeft: 50,
+  },
+  imageSelectButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 20,
+    width: '45%',
   },
   input: {
     width: 300,
