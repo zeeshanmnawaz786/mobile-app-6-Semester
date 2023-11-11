@@ -38,17 +38,41 @@ const getAllBlogs = async (req, res) => {
 };
 
 // http://localhost:8000/api/updateBlog?_id=6547b6e02f3467ddc8364588
+// const updateBlog = (req, res) => {
+//   const blogId = req.params.id;
+//   const { title, description, category } = req.body;
+
+//   blogSchema.findOneAndUpdate(
+//     blogId,
+//     {
+//       title,
+//       description,
+//       category,
+//     },
+//     { new: true },
+//     (error, updatedBlog) => {
+//       if (error) {
+//         console.error("Error updating blog:", error);
+//         res.status(500).json({ message: "Failed to update blog" });
+//       } else {
+//         if (!updatedBlog) {
+//           return res.status(404).json({ message: "Blog not found" });
+//         }
+
+//         console.log("Blog updated:", updatedBlog);
+//         res.json({ message: "Blog updated successfully", data: updatedBlog });
+//       }
+//     }
+//   );
+// };
+
 const updateBlog = (req, res) => {
-  const blogId = req.params.id;
-  const { title, description, category } = req.body;
+  const id = req.query._id;
+  const updatedTeacher = req.body;
 
   blogSchema.findOneAndUpdate(
-    blogId,
-    {
-      title,
-      description,
-      category,
-    },
+    { _id: id },
+    updatedTeacher,
     { new: true },
     (error, updatedBlog) => {
       if (error) {

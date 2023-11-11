@@ -14,27 +14,31 @@ import {Picker} from '@react-native-picker/picker';
 import {baseURI} from '../lib/constants';
 
 export default function UpdateBlog({item, fetchData}) {
-  const [title, setTitle] = useState(item.title);
-  const [description, setDescription] = useState(item.description);
-  const [selectedCategory, setSelectedCategory] = useState(item.category);
+  console.log('🚀 ~ f:', item);
+  const [title, setTitle] = useState();
+  const [description, setDescription] = useState();
+  const [selectedCategory, setSelectedCategory] = useState();
   const [createModalVisible, setCreateModalVisible] = useState(false);
 
   const showCreateModal = () => {
+    setTitle(item.title);
+    setDescription(item.description);
+    setSelectedCategory(item.category);
     setCreateModalVisible(true);
   };
-
   const hideCreateModal = () => {
     setCreateModalVisible(false);
   };
 
   const handleUpdate = async () => {
     try {
+      console.log(item._id, 'sdfsdfsdf');
       await axios.put(`${baseURI}/api/updateBlog?_id=${item._id}`, {
         title: title,
         description: description,
         category: selectedCategory,
       });
-      alert('Successfully blog updated');
+      // alert('Successfully blog updated');
       setCreateModalVisible(false);
       fetchData();
     } catch (error) {
@@ -77,6 +81,7 @@ export default function UpdateBlog({item, fetchData}) {
           <TextInput
             multiline={true}
             numberOfLines={4}
+            value={description}
             placeholder="Enter your content here..."
             style={styles.textAreaInput}
             placeholderTextColor="black"
