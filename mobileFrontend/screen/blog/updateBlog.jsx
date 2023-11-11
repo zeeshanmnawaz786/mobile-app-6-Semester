@@ -14,7 +14,6 @@ import {Picker} from '@react-native-picker/picker';
 import {baseURI} from '../lib/constants';
 
 export default function UpdateBlog({item, fetchData}) {
-  console.log('🚀 ~ f:', item);
   const [title, setTitle] = useState();
   const [description, setDescription] = useState();
   const [selectedCategory, setSelectedCategory] = useState();
@@ -32,13 +31,12 @@ export default function UpdateBlog({item, fetchData}) {
 
   const handleUpdate = async () => {
     try {
-      console.log(item._id, 'sdfsdfsdf');
       await axios.put(`${baseURI}/api/updateBlog?_id=${item._id}`, {
         title: title,
         description: description,
         category: selectedCategory,
       });
-      // alert('Successfully blog updated');
+      alert('Successfully blog updated');
       setCreateModalVisible(false);
       fetchData();
     } catch (error) {

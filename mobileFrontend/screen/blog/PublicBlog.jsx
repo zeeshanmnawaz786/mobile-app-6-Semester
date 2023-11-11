@@ -16,8 +16,13 @@ export default function MyBlog() {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    const fetchDataInterval = setInterval(() => {
+      fetchData();
+    }, 1000);
+
+    // Cleanup the interval on component unmount
+    return () => clearInterval(fetchDataInterval);
+  }, []); // Empty dependency array to run the effect only once on mount
 
   const renderItemFunc = ({item}) => {
     return (
