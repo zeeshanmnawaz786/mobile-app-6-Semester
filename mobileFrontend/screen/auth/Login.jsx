@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -16,6 +16,15 @@ import {baseURI} from '../lib/constants';
 export default function Login({navigation}) {
   const [userEmail, setUserEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
+        navigation.navigate('Tabs');
+      }
+    })();
+  }, []);
 
   const handleLogin = async () => {
     const data = {
