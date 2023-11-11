@@ -36,7 +36,7 @@ export default function MyBlog({navigation}) {
 
   const renderItemFunc = ({item}) => {
     return (
-      <TouchableOpacity style={styles.cardContainer}>
+      <View style={styles.cardContainer}>
         <View style={styles.cardText}>
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.author}>Author: {item.author}</Text>
@@ -56,7 +56,7 @@ export default function MyBlog({navigation}) {
             </TouchableOpacity>
           </View>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   };
 

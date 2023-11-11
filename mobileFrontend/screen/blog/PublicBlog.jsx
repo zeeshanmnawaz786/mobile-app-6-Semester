@@ -19,7 +19,7 @@ export default function MyBlog() {
 
   const renderItemFunc = ({item}) => {
     return (
-      <TouchableOpacity style={styles.cardContainer}>
+      <View style={styles.cardContainer}>
         <View style={styles.cardText}>
           <Text style={styles.title}>{item.title}</Text>
           <Text style={styles.author}>Author: {item.author}</Text>
@@ -29,7 +29,7 @@ export default function MyBlog() {
             {item.description.slice(0, 100)}...
           </Text>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   };
 
