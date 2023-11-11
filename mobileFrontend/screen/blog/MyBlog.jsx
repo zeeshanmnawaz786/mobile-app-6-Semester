@@ -21,7 +21,6 @@ export default function MyBlog({navigation}) {
   }, []);
 
   const handleDelete = async _id => {
-    console.log('🚀 ~ file: MyBlog.jsx:36 ~ handleDelete ~ id:', _id);
     try {
       await axios.delete(`${baseURI}/api/deleteBlog?_id=${_id}`);
       setAllBlogData(prevBlogs => prevBlogs.filter(blog => blog._id !== _id));
