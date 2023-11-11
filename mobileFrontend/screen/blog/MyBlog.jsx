@@ -1,14 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Button,
-} from 'react-native';
+import {FlatList, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import axios from 'axios';
-
 import CreateBlog from './createBlog';
 import UpdateBlog from './updateBlog';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -80,7 +72,6 @@ export default function MyBlog({navigation}) {
       <TouchableOpacity style={styles.button} onPress={logoutFunc}>
         <Text style={styles.buttonText}>Logout</Text>
       </TouchableOpacity>
-      {/* <Button title="Logout" onPress={() => navigation.navigate('Login')} /> */}
     </View>
   );
 }
