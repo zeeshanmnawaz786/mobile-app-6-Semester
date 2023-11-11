@@ -1,23 +1,26 @@
 import React, {useState, useEffect} from 'react';
-import {FlatList, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Button,
+} from 'react-native';
 import axios from 'axios';
 
 import CreateBlog from './createBlog';
 import UpdateBlog from './updateBlog';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
+import {baseURI} from '../lib/constants';
 
-export default function MyBlog() {
-  const navigation = useNavigation();
-
+export default function MyBlog({navigation}) {
   const [allBLogs, setAllBlogData] = useState('');
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await axios.get(
-          'https://27ef-111-88-25-251.ngrok-free.app/api/getAllBlogs',
-        );
+        const res = await axios.get(`${baseURI}/api/getAllBlogs`);
         setAllBlogData(res.data.allBlogs);
       } catch (error) {
         console.error('🚀 ~ file: MyBlog.jsx:39 ~ error:', error);
@@ -28,9 +31,7 @@ export default function MyBlog() {
   const handleDelete = async _id => {
     console.log('🚀 ~ file: MyBlog.jsx:36 ~ handleDelete ~ id:', _id);
     try {
-      await axios.delete(
-        `https://27ef-111-88-25-251.ngrok-free.app/api/deleteBlog?_id=${_id}`,
-      );
+      await axios.delete(`${baseURI}/api/deleteBlog?_id=${_id}`);
       setAllBlogData(prevBlogs => prevBlogs.filter(blog => blog._id !== _id));
       alert('Successfully blog deleted');
     } catch (error) {
@@ -79,6 +80,7 @@ export default function MyBlog() {
       <TouchableOpacity style={styles.button} onPress={logoutFunc}>
         <Text style={styles.buttonText}>Logout</Text>
       </TouchableOpacity>
+      {/* <Button title="Logout" onPress={() => navigation.navigate('Login')} /> */}
     </View>
   );
 }

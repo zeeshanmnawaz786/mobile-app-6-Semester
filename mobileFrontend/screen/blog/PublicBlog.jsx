@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {FlatList, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import axios from 'axios';
+import {baseURI} from '../lib/constants';
 
 export default function MyBlog() {
   const [allBLogs, setAllBlogData] = useState('');
@@ -8,9 +9,7 @@ export default function MyBlog() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await axios.get(
-          'https://27ef-111-88-25-251.ngrok-free.app/api/getAllBlogs',
-        );
+        const res = await axios.get(`${baseURI}/api/getAllBlogs`);
         setAllBlogData(res.data.allBlogs);
       } catch (error) {
         console.error('🚀 ~ file: MyBlog.jsx:39 ~ error:', error);

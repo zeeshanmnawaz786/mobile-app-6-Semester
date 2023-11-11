@@ -10,6 +10,7 @@ import {
 import blogImage from '../../assets/images/blog.png';
 import axios from 'axios';
 import {useNavigation} from '@react-navigation/native';
+import {baseURI} from '../lib/constants';
 
 export default function SignUp() {
   const navigation = useNavigation();
@@ -26,14 +27,11 @@ export default function SignUp() {
     if (username != '' && userEmail != '' && password != '') {
       console.log('🚀 ~ file: SignUp.jsx:24 ~ handleSignUp ~ data:', data);
       try {
-        await axios.post(
-          'https://27ef-111-88-25-251.ngrok-free.app/api/registerUser',
-          {
-            userName: username,
-            userEmail: userEmail,
-            password: password,
-          },
-        );
+        await axios.post(`${baseURI}/api/registerUser`, {
+          userName: username,
+          userEmail: userEmail,
+          password: password,
+        });
         alert('Succcessfully sign up');
         navigation.navigate('Login');
       } catch (error) {
@@ -42,6 +40,10 @@ export default function SignUp() {
     } else {
       alert('Try Again...');
     }
+  };
+
+  const handleLogin = () => {
+    navigation.navigate('Login');
   };
 
   return (
@@ -69,6 +71,13 @@ export default function SignUp() {
       <TouchableOpacity style={styles.button} onPress={handleSignUp}>
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
+      <Text style={styles.text}>
+        Have an account ?
+        <Text style={styles.signupText} onPress={handleLogin}>
+          {' '}
+          Login
+        </Text>
+      </Text>
     </View>
   );
 }
@@ -104,6 +113,17 @@ const styles = StyleSheet.create({
   buttonText: {
     textAlign: 'center',
     color: 'white',
+    fontWeight: 'bold',
+  },
+  text: {
+    textAlign: 'center',
+    marginTop: 15,
+    color: 'blue',
+    fontWeight: 'bold',
+  },
+  signupText: {
+    textAlign: 'center',
+    color: 'red',
     fontWeight: 'bold',
   },
 });

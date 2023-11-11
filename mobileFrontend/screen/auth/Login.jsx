@@ -9,12 +9,11 @@ import {
   Button,
 } from 'react-native';
 import blogImage from '../../assets/images/blog.png';
-import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {baseURI} from '../lib/constants';
 
-export default function Login() {
-  const navigation = useNavigation();
+export default function Login({navigation}) {
   const [userEmail, setUserEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -26,15 +25,12 @@ export default function Login() {
     if (userEmail != '' && password != '') {
       console.log('🚀 ~ file: SignUp.jsx:24 ~ handleSignUp ~ data:', data);
       try {
-        const res = await axios.post(
-          'https://27ef-111-88-25-251.ngrok-free.app/api/loginUser',
-          {
-            userEmail: userEmail,
-            password: password,
-          },
-        );
+        const res = await axios.post(`${baseURI}/api/loginUser`, {
+          userEmail: userEmail,
+          password: password,
+        });
 
-        navigation.navigate('MyBlog');
+        navigation.navigate('Tabs');
         await AsyncStorage.setItem('token', res.data.token);
         alert('Succcessfully sign up');
       } catch (error) {
@@ -43,6 +39,10 @@ export default function Login() {
     } else {
       alert('Try Again...');
     }
+  };
+
+  const handleSignup = () => {
+    navigation.navigate('SignUp');
   };
 
   return (
@@ -61,15 +61,16 @@ export default function Login() {
         secureTextEntry={true}
         onChangeText={text => setPassword(text)}
       />
-      <TouchableOpacity
-        style={styles.button} // Add your desired styles here
-        onPress={handleLogin}>
-        <Text
-          style={styles.buttonText} // Add your desired styles here
-        >
-          Login
-        </Text>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
+      <Text style={styles.text}>
+        Don,t have an account ?
+        <Text style={styles.signupText} onPress={handleSignup}>
+          {' '}
+          Signup
+        </Text>
+      </Text>
     </View>
   );
 }
@@ -105,6 +106,17 @@ const styles = StyleSheet.create({
   buttonText: {
     textAlign: 'center',
     color: 'white',
+    fontWeight: 'bold',
+  },
+  text: {
+    textAlign: 'center',
+    marginTop: 15,
+    color: 'blue',
+    fontWeight: 'bold',
+  },
+  signupText: {
+    textAlign: 'center',
+    color: 'red',
     fontWeight: 'bold',
   },
 });

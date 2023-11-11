@@ -11,6 +11,7 @@ import {
 import blogImage from '../../assets/images/blog.png';
 import axios from 'axios';
 import {Picker} from '@react-native-picker/picker';
+import {baseURI} from '../lib/constants';
 
 export default function CreateBlog() {
   const [title, setTitle] = useState('');
@@ -37,16 +38,13 @@ export default function CreateBlog() {
       selectedCategory != ''
     ) {
       try {
-        await axios.post(
-          'https://27ef-111-88-25-251.ngrok-free.app/api/registerBlog',
-          {
-            title: title,
-            description: description,
-            author: author,
-            date: currentDate,
-            category: selectedCategory,
-          },
-        );
+        await axios.post(`${baseURI}/api/registerBlog`, {
+          title: title,
+          description: description,
+          author: author,
+          date: currentDate,
+          category: selectedCategory,
+        });
         alert('Succcessfully blog created');
         setCreateModalVisible(false);
       } catch (error) {

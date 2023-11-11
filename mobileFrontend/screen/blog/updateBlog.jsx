@@ -11,6 +11,7 @@ import {
 import blogImage from '../../assets/images/blog.png';
 import axios from 'axios';
 import {Picker} from '@react-native-picker/picker';
+import {baseURI} from '../lib/constants';
 
 export default function UpdateBlog({item}) {
   const [title, setTitle] = useState(item.title);
@@ -34,14 +35,11 @@ export default function UpdateBlog({item}) {
     };
     console.log('🚀 ~ file: data:', data);
     try {
-      await axios.put(
-        `https://27ef-111-88-25-251.ngrok-free.app/api/updateBlog?_id=${item._id}`,
-        {
-          title: title,
-          description: description,
-          category: selectedCategory,
-        },
-      );
+      await axios.put(`${baseURI}/api/updateBlog?_id=${item._id}`, {
+        title: title,
+        description: description,
+        category: selectedCategory,
+      });
       alert('Successfully blog updated');
       setCreateModalVisible(false);
     } catch (error) {
