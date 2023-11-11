@@ -28,12 +28,6 @@ export default function UpdateBlog({item, fetchData}) {
   };
 
   const handleUpdate = async () => {
-    const data = {
-      title: title,
-      description: description,
-      category: selectedCategory,
-    };
-    console.log('🚀 ~ file: data:', data);
     try {
       await axios.put(`${baseURI}/api/updateBlog?_id=${item._id}`, {
         title: title,
