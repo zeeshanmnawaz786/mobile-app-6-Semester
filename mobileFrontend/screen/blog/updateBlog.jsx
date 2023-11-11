@@ -13,7 +13,7 @@ import axios from 'axios';
 import {Picker} from '@react-native-picker/picker';
 import {baseURI} from '../lib/constants';
 
-export default function UpdateBlog({item}) {
+export default function UpdateBlog({item, fetchData}) {
   const [title, setTitle] = useState(item.title);
   const [description, setDescription] = useState(item.description);
   const [selectedCategory, setSelectedCategory] = useState(item.category);
@@ -42,6 +42,7 @@ export default function UpdateBlog({item}) {
       });
       alert('Successfully blog updated');
       setCreateModalVisible(false);
+      fetchData();
     } catch (error) {
       console.log('🚀 ~ file: createBlog.jsx:72 ~ handleLogin ~ error:', error);
     }
@@ -90,7 +91,7 @@ export default function UpdateBlog({item}) {
           />
 
           <TouchableOpacity style={styles.button} onPress={handleUpdate}>
-            <Text style={styles.buttonText}>Create</Text>
+            <Text style={styles.buttonText}>Update</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={hideCreateModal}>
             <Text style={styles.buttonText}>Cancel</Text>

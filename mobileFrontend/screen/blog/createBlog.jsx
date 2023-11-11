@@ -13,7 +13,7 @@ import axios from 'axios';
 import {Picker} from '@react-native-picker/picker';
 import {baseURI} from '../lib/constants';
 
-export default function CreateBlog() {
+export default function CreateBlog({fetchData}) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [author, setAuthor] = useState('');
@@ -47,6 +47,7 @@ export default function CreateBlog() {
         });
         alert('Succcessfully blog created');
         setCreateModalVisible(false);
+        fetchData();
       } catch (error) {
         console.log(
           '🚀 ~ file: createBlog.jsx:72 ~ handleLogin ~ error:',

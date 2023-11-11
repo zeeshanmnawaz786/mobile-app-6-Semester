@@ -9,15 +9,17 @@ import {baseURI} from '../lib/constants';
 export default function MyBlog({navigation}) {
   const [allBLogs, setAllBlogData] = useState('');
 
+  const fetchData = async () => {
+    try {
+      const res = await axios.get(`${baseURI}/api/getAllBlogs`);
+      setAllBlogData(res.data.allBlogs);
+    } catch (error) {
+      console.error('🚀 ~ file: MyBlog.jsx:39 ~ error:', error);
+    }
+  };
+
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await axios.get(`${baseURI}/api/getAllBlogs`);
-        setAllBlogData(res.data.allBlogs);
-      } catch (error) {
-        console.error('🚀 ~ file: MyBlog.jsx:39 ~ error:', error);
-      }
-    })();
+    fetchData();
   }, []);
 
   const handleDelete = async _id => {
@@ -46,7 +48,7 @@ export default function MyBlog({navigation}) {
             {item.description.slice(0, 100)}...
           </Text>
           <View style={styles.blogActionContainer}>
-            <UpdateBlog item={item} />
+            <UpdateBlog item={item} fetchData={fetchData} />
             <TouchableOpacity
               style={styles.button}
               onPress={() => {
@@ -62,7 +64,7 @@ export default function MyBlog({navigation}) {
 
   return (
     <View style={styles.container}>
-      <CreateBlog />
+      <CreateBlog fetchData={fetchData} />
       <FlatList
         data={allBLogs}
         renderItem={renderItemFunc}
